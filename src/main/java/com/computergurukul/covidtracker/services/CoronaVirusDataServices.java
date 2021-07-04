@@ -7,12 +7,14 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.computergurukul.covidtracker.model.LocationStats;
@@ -22,6 +24,8 @@ public class CoronaVirusDataServices {
 
 private final  static String VIRUS_DATA_URL="https://api.covid19india.org/csv/latest/state_wise_daily.csv";
 private List<LocationStats> allStats=new ArrayList<>();
+@Value("#{${States.map}}")
+Map<String, String> simpleMap;
 @PostConstruct
 //@Scheduled(cron="**1***")
 public void fetchVirusData()throws Exception {
@@ -43,10 +47,15 @@ public void fetchVirusData()throws Exception {
 	List<CSVRecord> records =parser.getRecords();
 	int size = records.size();
 	List<String> headers = parser.getHeaderNames();
-//	CSVRecord headers = records.iterator().next();
 	for(int i=3;i<headers.size();i++) {
 	LocationStats locationStat= new LocationStats();
-	locationStat.setState(headers.get(i));
+	
+	if(simpleMap.containsKey(headers.get(i))){
+	locationStat.setState(simpleMap.get(headers.get(i)));
+	}
+	else
+		locationStat.setState("Unknown");
+		
 	CSVRecord deceased=records.get(size-1);
 	locationStat.setLatestDeceased((Integer.parseInt(deceased.get(i))));
 	CSVRecord recovered=records.get(size-2);
@@ -54,23 +63,14 @@ public void fetchVirusData()throws Exception {
 	CSVRecord confirmed=records.get(size-3);
 	locationStat.setLatestConfirmed((Integer.parseInt(confirmed.get(i))));
 	newStats.add(locationStat);
-	System.out.println(locationStat);
 	}
-		//System.out.println(headers.get(i));
-//	CSVRecord deceased=records.get(size-1);
-	
 	this.allStats=newStats;
 	
 	
 	
 	
 	
-	//CSVRecord values = records.listIterator().next();
-
-	   // String total = record.get("Status");
-	   
-	   // String customerNo = record.get("CustomerNo");
-	    //String name = record.get("Name");
+	
 }
 public List<LocationStats> getAllStats() {
 	return allStats;
