@@ -72,5 +72,11 @@ public void fetchVirusData()throws Exception {
 	   // String customerNo = record.get("CustomerNo");
 	    //String name = record.get("Name");
 }
+public List<LocationStats> getAllStats() {
+	return allStats;
+}
+public void setAllStats(List<LocationStats> allStats) {
+	this.allStats = allStats;
+}
 
 }

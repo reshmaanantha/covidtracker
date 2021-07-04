@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+  <head>
+    <title>COVID 19 INDIA TRACKER</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    
+  </head>
+
+  <body>
+  
+ <table>
+      <tr>
+        <th>State</th>
+        <th>Confirmed</th>
+        <th>Recovered</th>
+        <th>Deceased</th>
+      </tr>
+      <tr th:each="stats : ${locationStats}">
+        <td th:text="${stats.state}">state</td>
+        <td th:text="${stats.latestConfirmed}">confirmed</td>
+         <td th:text="${stats.latestRecovered}">recovered</td>
+          <td th:text="${stats.latestDeceased}">deceased</td>
+       
+      </tr>
+    </table>
+  
+  </body>
+
+</html>
