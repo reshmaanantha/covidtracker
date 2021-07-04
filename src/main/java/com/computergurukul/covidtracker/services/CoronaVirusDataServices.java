@@ -24,8 +24,15 @@ public class CoronaVirusDataServices {
 
 private final  static String VIRUS_DATA_URL="https://api.covid19india.org/csv/latest/state_wise_daily.csv";
 private List<LocationStats> allStats=new ArrayList<>();
+private int total=0;
 @Value("#{${States.map}}")
 Map<String, String> simpleMap;
+public int getTotal() {
+	return total;
+}
+public void setTotal(int total) {
+	this.total = total;
+}
 @PostConstruct
 //@Scheduled(cron="**1***")
 public void fetchVirusData()throws Exception {
@@ -47,7 +54,9 @@ public void fetchVirusData()throws Exception {
 	List<CSVRecord> records =parser.getRecords();
 	int size = records.size();
 	List<String> headers = parser.getHeaderNames();
-	for(int i=3;i<headers.size();i++) {
+	CSVRecord latestconfirmed=records.get(size-3);
+	total=Integer.parseInt(latestconfirmed.get(3));
+	for(int i=4;i<headers.size();i++) {
 	LocationStats locationStat= new LocationStats();
 	
 	if(simpleMap.containsKey(headers.get(i))){

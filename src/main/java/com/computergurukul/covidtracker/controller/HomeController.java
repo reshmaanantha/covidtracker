@@ -15,7 +15,8 @@ public class HomeController {
 	@GetMapping("/")
 	public String home(Model theModel) {
 		theModel.addAttribute("locationStats",coronaVirusDataServices.getAllStats());
-		theModel.addAttribute("welcome","COVID 19 TRACKER");
+		theModel.addAttribute("totalCases",coronaVirusDataServices.getTotal());
+		
 		return "home";
 		
 	}
